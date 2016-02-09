@@ -598,7 +598,7 @@ sub irc_on_public {
         &talking( $chl, -1 );
     } elsif ( $addressed
         and $operator
-        and $bag{msg} =~ /^(join|part) (#[-\w]+)(?: (.*))?/i )
+        and $bag{msg} =~ /^(join|part) (#[#-\w]+)(?: (.*))?/i )
     {
         my ( $cmd, $dst, $msg ) = ( $1, $2, $3 );
         unless ($dst) {
@@ -3008,7 +3008,7 @@ sub lookup {
     if ( exists $params{verb} ) {
         $sql .= " and verb = ?";
         push @placeholders, $params{verb};
-    } elsif ( exists $params{exclude_verb} ) {
+    } elsif ( exists $params{exclude_verb} and @{$params{exclude_verb}} and $#{$params{exclude_verb}} > 0) {
         $sql .= " and verb not in ("
           . join( ", ", map { "?" } @{$params{exclude_verb}} ) . ")";
         push @placeholders, @{$params{exclude_verb}};
