@@ -768,18 +768,24 @@ sub irc_on_public {
     {
         my ( $src, $dst ) = ( $1, $2 );
         $stats{alias}++;
+		
+		if (lc $src eq lc $dst) {
+			# this is bad
+			&say( $chl => "$bag{who}: Yes, I know that!" );
+		} else {
 
-        &sql(
-            'select id, verb, tidbit from bucket_facts where fact = ? limit 1',
-            [$src],
-            {
-                %bag,
-                cmd     => "alias1",
-                src     => $src,
-                dst     => $dst,
-                db_type => "SINGLE",
-            }
-        );
+			&sql(
+				'select id, verb, tidbit from bucket_facts where fact = ? limit 1',
+				[$src],
+				{
+					%bag,
+					cmd     => "alias1",
+					src     => $src,
+					dst     => $dst,
+					db_type => "SINGLE",
+				}
+			);
+		}
     } elsif ( $operator and $addressed and $bag{msg} =~ /^lookup #?(\d+)\W*$/ )
     {
         &sql(
